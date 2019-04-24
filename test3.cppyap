@@ -1,0 +1,13 @@
+
+#jsdepend
+
+
+
+
+_state('test1', 'v1');
+#endjs
+
+#js
+
+str_out(v1.h1);
+#endjs

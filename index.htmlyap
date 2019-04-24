@@ -1,0 +1,32 @@
+#jsinclude "html.jsyap"
+
+<!doctype html>
+<html>
+<body>
+
+<script>
+var changeout = @getchangeout();
+
+function something(title, base)
+{
+	var temp;
+	@mt(
+	<h1> $title$ </h1>
+	<i> $base$ </i>
+	);
+	document.writeln(temp);
+}
+
+something("this is title", 
+@R(
+<b> some stuff here</b>
+and more stuff.
+);
+);
+
+
+
+</script>
+
+</body>
+</html>

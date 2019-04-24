@@ -1,0 +1,73 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+#js
+
+
+
+String.prototype.replaceAll = function(str1, str2, ignore) 
+{
+	//str1 = "[" + str1 + "]";
+    return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
+} 
+String.prototype.s = function(v)
+{
+	var retstr = this;
+	for(var i1 in v)
+	{
+		var str1 = "@" + i1 + "@";
+		retstr = retstr.replaceAll(str1, v[i1]); 
+	}
+	return retstr;
+}
+
+	
+function hsh(v)
+{
+	out(hash(v));
+}
+
+var changeout = R"(
+(function()
+{
+	var a1 = temp.split('@@');
+	for(var i1 = 1; i1 < a1.length; i1 +=2)
+	{
+		eval('a1[i1] = ' + a1[i1] + ';');
+	}
+	temp = a1.join("");
+})();
+)";
+
+var b = function()
+{
+	out(R"(
+	
+	some more
+	
+	)");
+}
+var f = function(ret)
+{
+	
+var temp = R"(
+|@@ret@@|
+@b();
+)";
+
+eval(changeout);
+out(temp);
+
+}
+
+
+#endjs
+
+
+int main()
+{
+	@f(    (hi there, asdfasdf)  );
+
+	return 0;
+}

@@ -1,0 +1,59 @@
+#jsinclude <lib.jsyap>
+
+function trim_params(s)
+{
+	var v = s.trim();
+	if(v.length -2 <=0) return "";
+	
+	v = v.substring(1, v.length -1);
+	return v;
+}
+
+
+
+
+for(var classname in buildclass)
+{
+	str_out("class " + classname + "\r{\r");
+	var a1 = buildclass[classname];
+	
+	for(var i1 = 0; i1 < a1.length; i1++)
+	{
+		var at = a1[i1];
+		if(at.type == "public")
+		{
+			str_out("public:\r");
+		}
+		else if(at.type == "private")
+		{
+			str_out("private:\r");
+		}
+		else if(at.type == "protected")
+		{
+			str_out ("protected:\r");
+		}
+		else if(at.type == "params")
+		{
+			str_out(at.params);
+		}
+		else if(at.type == "function")
+		{
+			str_out(at.ret + " " + at.name + at.params + ";\r");
+		}
+	}
+	str_out("\r};\r");
+	
+	for(var i1 = 0; i1 < a1.length; i1++)
+	{
+		var at = a1[i1];
+		if(at.type == "function")
+		{
+			var tparams = trim_params(at.params);
+			str_out(at.ret + " " + classname + "(void * at, 
+		}
+	}
+	
+}
+
+
+

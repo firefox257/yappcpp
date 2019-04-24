@@ -1,0 +1,236 @@
+<!doctype html>
+<html>
+
+<body>
+<style>
+#m3d
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+</style>
+
+<script id="v" type="x-shader/x-vertex">
+
+attribute vec3 myv;
+attribute vec4 myc;
+attribute vec3 myn;
+
+uniform float scalex;
+uniform float scaley;
+
+varying vec4 vc;
+varying vec3 vn;
+
+void main(void)
+{
+        vec4 a= vec4(myv,1.0);
+        a.x=a.x*scalex;
+        a.y=a.y*scaley;
+        if(a.z<=-1.0)
+        {
+			a.w=-a.z;
+        }
+        else
+        {
+			a.w=1.0/(2.0+a.z);
+        }
+        gl_Position =a;
+		
+		vc = myc;
+		vn = myn;
+		
+}
+</script>
+
+<script id="f" type="x-shader/x-fragment">
+precision mediump float;
+
+
+
+varying vec4 vc;
+varying vec3 vn;
+
+void main(void) 
+{
+        /*square*/
+       
+        gl_FragColor = vec4(vc.r, vc.g, vc.b, vc.a);
+
+}
+</script>
+
+
+<canvas id = "m3d"></canvas>
+<script>
+
+function m3d(id)
+{
+	function $q(id)
+	{
+		return document.querySelector(id);
+	}
+	
+	var canvas = $q(id);
+	var gl = canvas.getContext('webgl');
+	
+	return ( {
+		canvas: canvas,
+		gl: gl,
+		scalex: 1,
+		scaley: 1,
+		init: function()
+		{
+			var w = this.w();
+			var h = this.h();
+			this.canvas.style.width = w + "px";
+			this.canvas.style.height = h + "px";
+			this.canvas.setAttribute("width", w + "px");
+			this.canvas.setAttribute("height", h + "px");
+			
+			if(w>=h)
+			{
+					this.scalex=h/w;
+					this.scaley=1;
+			}
+			else
+			{
+					this.scalex=1;
+					this.scaley=w/h;
+			}
+			var gl = this.gl;
+			gl.clearColor(0.0, 1.0, 1.0, 1.0);
+			gl.enable(gl.DEPTH_TEST);
+			gl.clear(gl.COLOR_BUFFER_BIT |gl.DEPTH_BUFFER_BIT);
+			
+			return this;
+		},
+		w: function()
+		{
+			return this.canvas.clientWidth;
+		},
+		h: function()
+		{
+			return this.canvas.clientHeight;
+		},
+		clear: function()
+		{
+			var a = arguments;
+			var gl = this.gl;
+			if(a.length == 1)
+			{
+				var c = a[0];
+				gl.clearColor(c.r, c.g, c.b, c.a);
+			}
+			else if(a.length == 4)
+			{
+				gl.clearColor(a[0], a[1], a[2], a[3]);
+			}
+			gl.clear(gl.COLOR_BUFFER_BIT |gl.DEPTH_BUFFER_BIT);
+		}, 
+		getshader: function(id1)
+        {
+			var gl = this.gl;
+			var shaderScript = $q(id1);
+			if (!shaderScript)
+			{
+					return null;
+			}
+			var str = $q(id1).innerHTML;
+			var shader;
+			if (shaderScript.type == "x-shader/x-fragment")
+			{
+					shader = gl.createShader(gl.FRAGMENT_SHADER);
+			}
+			else if (shaderScript.type == "x-shader/x-vertex")
+			{
+					shader = gl.createShader(gl.VERTEX_SHADER);
+			}
+			else
+			{
+					return null;
+			}
+			gl.shaderSource(shader, str);
+			gl.compileShader(shader);
+			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) 
+			{
+					alert(gl.getShaderInfoLog(shader));
+					return null;
+			}
+			return shader;
+        },
+        makeprog: function(vid,fid)
+        {
+			var gl = this.gl;
+			
+			var vv=g.getshader(vid);
+			var ff=g.getshader(fid);
+			var prog;
+			prog=gl.createProgram();
+			gl.attachShader(prog,vv);
+			gl.attachShader(prog,ff);
+			gl.linkProgram(prog);
+			if (!gl.getProgramParameter(prog,gl.LINK_STATUS))
+			{
+					alert("Could not initialise shaders");
+			}
+			this.useprog(prog);
+			prog.scalex=gl.getUniformLocation(prog,"scalex");
+			prog.scaley=gl.getUniformLocation(prog,"scaley");
+			gl.uniform1f(prog.scalex,this.scalex);
+			gl.uniform1f(prog.scaley,this.scaley);
+			
+			return prog;
+        },
+		make_VC_prog: function(vid, fid)
+		{
+			var gl = this.gl;
+			var prog = this.makeprog(vid, fid);
+			prog.myv=gl.getAttribLocation(prog,"myv");
+			gl.enableVertexAttribArray(prog.myv);
+			
+			prog.myc=gl.getAttribLocation(prog,"myc");
+			gl.enableVertexAttribArray(prog.myc);
+			
+			return prog;
+		},
+		make_VCN_prog: function(vid, fid)
+		{
+			var gl = this.gl;
+			var prog = this.makeprog(vid, fid);
+			prog.myv=gl.getAttribLocation(prog,"myv");
+			gl.enableVertexAttribArray(prog.myv);
+			
+			prog.myc=gl.getAttribLocation(prog,"myc");
+			gl.enableVertexAttribArray(prog.myc);
+			
+			prog.myn=gl.getAttribLocation(prog,"myn");
+			gl.enableVertexAttribArray(prog.myn);
+			
+			return prog;
+		},
+		useprog: function(prog1)
+        {
+               gl.useProgram(prog1);
+        },
+		create_VC_buff: function(v, prog)
+		{
+			
+		}
+		
+	}).init();
+}
+
+var g = m3d("#m3d");
+g.clear();
+var p1 = g.makeprog("#v", "#f");
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+g++ -std=c++11 main.cpp duktape.o -I ./include -o main.exe

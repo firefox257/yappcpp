@@ -1,0 +1,112 @@
+#jsinclude <lib.jsyap>
+
+var buildclass = {};
+
+function iclass(classname)
+{
+	buildclass[classname] = [];
+	var atclass = buildclass[classname];
+	
+	return {
+		"public": function()
+		{
+			atclass.push({
+				type: "public"
+			});
+			return this;
+		},
+		"private": function()
+		{
+			atclass.push({
+				type: "private"
+			});
+			return this;
+		},
+		"protected": function()
+		{
+			atclass.push({
+				type: "protected"
+			});
+			return this;
+		},
+		p: function(params)
+		{
+			atclass.push({
+				type:"params",
+				params: params
+			});
+			
+			return this;
+		},
+		f: function(ret, name, params, code)
+		{
+			ret =  ret.trim();
+			name = name.trim();
+			params = params.trim();
+			
+			atclass.push({
+				type:"function",
+				ret: ret,
+				name: name,
+				params: params
+			});
+			
+			var temp = R"(
+			$ret$ $classname$::$name$$params$$code$
+			)".trim() + "\r\n";
+			eval(changeout);
+			out(temp);
+			
+			return this;
+		}
+	};
+}
+/*
+function iclass(classname)
+{
+	buildclass[classname] = {
+		public_params: [],
+		private_params: [],
+		protected_params: [], 
+		public_func: {}, 
+		private_func: {},
+		protected_func: {}
+	};
+	
+	return {
+		public_params: function(params)
+		{
+			buildclass[classname].public_params.push(params);
+			return this;
+		}, 
+		private_params: function(params)
+		{
+			buildclass[classname].private_params.push(params);
+			return this;
+		},
+		protected_params: function(params)
+		{
+			buildclass[classname].protected_params.push(params);
+			return this;
+		}, 
+		public_func: function(ret, name, params, code)
+		{
+			ret = ret.trim();
+			name = name.trim();
+			params = params.trim();
+			exparams = exparams.trim();
+			buildclass[classname].public_func[name] = {
+				ret: ret, 
+				params: params
+			};
+			
+			var temp = R"(
+			$ret$ $classname$::$name$$params$$code$
+			)".trim() + "\r\n";
+			eval(changeout);
+			out(temp);
+			return this;
+		}
+	};
+}
+*/

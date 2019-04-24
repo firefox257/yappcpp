@@ -1,0 +1,4 @@
+#jsdepend
+_state("interface_test", "buildclass");
+#endjs
+#jsinclude <interfacebuild.jsyap>

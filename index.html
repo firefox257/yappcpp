@@ -1,0 +1,26 @@
+
+
+<!doctype html>
+<html>
+<body>
+
+<script>
+var changeout = "\n(function()\n{\n\tvar ___a1 = temp.split(\"$\");\n\tfor(var ___i1 = 1;  ___i1 < ___a1.length;  ___i1+=2)\n\t{\n\t\teval(\"___a1[ ___i1] = \" + ___a1[ ___i1] + \";\");\n\t}\n\ttemp = ___a1.join(\"\");\n})();\n\n\n"
+
+function something(title, base)
+{
+	var temp;
+	temp = "\n\t<h1> $title$ </h1>\n\t<i> $base$ </i>\n\t"; eval(changeout); 
+	document.writeln(temp);
+}
+
+something("this is title", 
+"\n<b> some stuff here</b>\nand more stuff.\n"
+);
+
+
+
+</script>
+
+</body>
+</html>

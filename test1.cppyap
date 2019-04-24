@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+
+#js
+
+var hsh = hash;
+function fun1()
+{
+	out(hsh("hi there"));
+}
+var v1 = {h1:"hi there"};
+function _end_state()
+{
+	_state('test1', 'v1', v1);
+}
+#endjs
+
+
+int main()
+{
+	@fun1();;
+}

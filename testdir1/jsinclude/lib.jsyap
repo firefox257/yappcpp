@@ -1,0 +1,14 @@
+var changeout = R"(
+(function()
+{
+	var ___a1 = temp.split("$");
+	for(var ___i1 = 1;  ___i1 < ___a1.length;  ___i1+=2)
+	{
+		eval("___a1[ ___i1] = " + ___a1[ ___i1] + ";");
+	}
+	temp = ___a1.join("");
+})();
+
+
+)";
+

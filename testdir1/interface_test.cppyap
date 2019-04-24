@@ -1,0 +1,35 @@
+#include <iostream>
+#include <string>
+#include "ainterface_h.cpp"
+#jsinclude <interfacemake.jsyap>
+using namespace std;
+
+#js
+function _end_state()
+{
+	_state("interface_test", "buildclass", buildclass);
+}
+
+
+
+#endjs
+
+@iclass(try1)
+.private()
+.p(
+	int _x;
+	int _y;
+	int _w;
+	int _h;
+)
+.public()
+.f(int, x, (), 
+{
+	return _x;
+})
+.f(void, y, (int d), 
+{
+	_x = d;
+});
+
+
